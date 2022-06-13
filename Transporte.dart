@@ -7,37 +7,43 @@ class transporte {
   //constructor
   transporte(this.matrix, this.demanda, this.oferta);
   //Metodo de la esquina noroeste
-  int noroeste_modelo() {
+  int esquina_noroeste_modelo() {
     int costo_final = 0;
     //crear matriz del modelo
     List<List<int>> matriz = [];
     crear_matriz(matriz);
     //Recorrer matriz
+    //oferta-demanda total
+    int oferta_total = 0;
+    for (int k = 0; k < this.oferta.length; k++) {
+      oferta_total += oferta[k];
+    }
     //inicializar las variables
     int i = 0;
     int j = 0;
     int costo_demanda = 0;
     int costo_oferta = 0;
-    while (i < matriz.length) {
-      while (j < matriz[0].length) {
-        //satisface demanda?
-        if (recorrer_matriz(matriz, j, matriz.length, this.demanda[j])) {
-          costo_oferta += matriz[i][j];
-          j++;
-          costo_demanda = 0;
-        }
-        //satisface oferta?
-        if (recorrer_matriz2(matriz, i, matriz[0].length, this.oferta[i])) {
-          costo_demanda += matriz[i][j];
-          i++;
-          costo_oferta = 0;
-        }
-        matriz[i][j] =
-            min(this.demanda[j] - costo_demanda, this.oferta[i] - costo_oferta);
+    int costo_parcial = 0;
+    while (costo_parcial != oferta_total) {
+      //satisface demanda?
+      if (recorrer_matriz(matriz, j, matriz.length, this.demanda[j])) {
+        costo_oferta += matriz[i][j];
+        j++;
+        costo_demanda = 0;
       }
+      //satisface oferta?
+      if (recorrer_matriz2(matriz, i, matriz[0].length, this.oferta[i])) {
+        costo_demanda += matriz[i][j];
+        i++;
+        costo_oferta = 0;
+      }
+      matriz[i][j] =
+          min(this.demanda[j] - costo_demanda, this.oferta[i] - costo_oferta);
+      costo_parcial += matriz[i][j];
     }
     //calculo del costo total
     costo_final = calcular_costo(matriz, this.matrix);
+    print('Costo final del coso:{$costo_final}');
     return costo_final;
   }
 

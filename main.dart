@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'Transporte.dart';
+
 void main(List<String> args) {
   print("ingrese cantidad de origenes");
   int? n = int.parse(stdin.readLineSync()!);
@@ -33,4 +35,6 @@ void main(List<String> args) {
     int? valor = int.parse(stdin.readLineSync()!);
     dd.add(valor);
   }
+  var modelo = new transporte(matrix, dd, of);
+  modelo.esquina_noroeste_modelo();
 }
