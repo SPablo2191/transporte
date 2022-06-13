@@ -21,15 +21,16 @@ void main(List<String> args) {
   }
   print(matrix);
   //Restricciones
-  List<int> rhs = [];
+  List<int> of = [];
   for (var i = 0; i < n; i++) {
     print("ingrese restricciones del lado derecho para originarios:");
     int? valor = int.parse(stdin.readLineSync()!);
-    rhs.add(valor);
+    of.add(valor);
   }
+  List<int> dd = [];
   for (var i = 0; i < m; i++) {
     print("ingrese restricciones del lado derecho para destinarios:");
     int? valor = int.parse(stdin.readLineSync()!);
-    rhs.add(valor);
+    dd.add(valor);
   }
 }
