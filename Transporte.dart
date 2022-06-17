@@ -1,14 +1,22 @@
 import 'dart:math';
 
+import 'Modelo.dart';
+
 class transporte {
-  List<List<int>> costes_transporte;
-  List<int> demanda;
-  List<int> oferta;
+  late List<List<int>> costes_transporte;
+  late List<int> demanda;
+  late List<int> oferta;
   late List<List<int>> solucion_inicial;
   List<List<List<int>>> iteraciones_solucion_inicial = [];
 
   //constructor
   transporte(this.costes_transporte, this.demanda, this.oferta);
+
+  transporte.from(Modelo modelo) {
+    this.costes_transporte = modelo.costos;
+    this.demanda = modelo.demanda;
+    this.oferta = modelo.producciones;
+  }
 
   //Metodo de la esquina noroeste
   void esquina_noroeste_modelo() {
@@ -34,35 +42,43 @@ class transporte {
         j++;
         costo_demanda = 0;
       }
-      iteraciones_solucion_inicial.add(matriz);
       //satisface oferta?
       if (recorrer_matriz2(matriz, i, matriz[0].length, this.oferta[i])) {
         costo_demanda += matriz[i][j];
         i++;
         costo_oferta = 0;
       }
-      iteraciones_solucion_inicial.add(matriz);
       matriz[i][j] =
           min(this.demanda[j] - costo_demanda, this.oferta[i] - costo_oferta);
+      var copia = copiarMatriz(matriz);
+      iteraciones_solucion_inicial.add(copia);
       costo_parcial += matriz[i][j];
     }
     //calculo del costo total
-    int costo_final = calcular_costo(matriz, this.costes_transporte);
-    print('Costo asociado a la combinación óptima: \$$costo_final');
-    // print("Iteraciones:");
-    // int index = 1;
-    // for (var matriz in iteraciones_solucion_inicial) {
-    //   print("Iteración $index:");
-    //   for (var fila in matriz) {
-    //     print(fila);
-    //   }
-    //   index++;
-    // }
-    solucion_inicial = matriz;
+    solucion_inicial = copiarMatriz(matriz);
   }
 
-  //Algoritmo del Escalón
-  void algoritmo_escalon() {}
+  void mostrarIteraciones() {
+    for (var i = 0; i < iteraciones_solucion_inicial.length; i++) {
+      print("Iteración ${i + 1}:");
+      _mostrarMatriz(iteraciones_solucion_inicial[i]);
+    }
+  }
+
+  void mostrarSolucionInicial() {
+    print("Solución Inicial:");
+    _mostrarMatriz(solucion_inicial);
+    int costo = calcular_costo(solucion_inicial, costes_transporte);
+    print('\tCosto asociado a la solución: \$$costo');
+  }
+
+  List<List<int>> copiarMatriz(List<List<int>> matriz) {
+    List<List<int>> resultado = [];
+    for (var fila in matriz) {
+      resultado.add(new List.from(fila));
+    }
+    return resultado;
+  }
 
   int calcular_costo(
       List<List<int>> matriz, List<List<int>> costes_transporte) {
@@ -76,19 +92,19 @@ class transporte {
   }
 
   bool recorrer_matriz(
-      List<List<int>> matriz, int rep, int tamanio, int valor_max) {
+      List<List<int>> matriz, int indexConstante, int tamanio, int valor_max) {
     int demanda = 0;
     for (int i = 0; i < tamanio; i++) {
-      demanda += matriz[i][rep];
+      demanda += matriz[i][indexConstante];
     }
     return demanda == valor_max;
   }
 
   bool recorrer_matriz2(
-      List<List<int>> matriz, int rep, int tamanio, int valor_max) {
+      List<List<int>> matriz, int indexConstante, int tamanio, int valor_max) {
     int oferta = 0;
     for (int i = 0; i < tamanio; i++) {
-      oferta += matriz[rep][i];
+      oferta += matriz[indexConstante][i];
     }
     return oferta == valor_max;
   }
@@ -107,33 +123,9 @@ class transporte {
     //matriz.add(this.demanda);
   }
 
-  // // int esquina_noroeste() {
-  //   //List<List<int>> matriz = [];
-  //   int costo_final = 0;
-  //   //se define las variables incrementales afuera para ir desplazandose acorde a los costos
-  //   int i = 0;
-  //   int j = 0;
-  //   List<int> list = [];
-  //   int aux = 0;
-  //   while (i < this.oferta.length) {
-  //     int costo_parcial = 0;
-  //     int suma_costos = 0;
-  //     while (j < this.demanda.length) {
-  //       int minimo = min(this.oferta[i] - costo_parcial, this.demanda[j] - aux);
-  //       suma_costos += minimo;
-  //       if (this.demanda[j] - minimo == 0) {
-  //         costo_parcial += minimo;
-  //         list.add(minimo);
-  //         j++;
-  //       }
-  //       if (suma_costos == this.oferta[i]) {
-  //         list.add(minimo);
-  //         aux += minimo;
-  //         i++;
-  //         break;
-  //       }
-  //     }
-  //   }
-  //   return costo_final;
-  // }
+  void _mostrarMatriz(List<List<int>> m) {
+    for (var fila in m) {
+      print("\t$fila");
+    }
+  }
 }

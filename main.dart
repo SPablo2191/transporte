@@ -4,13 +4,14 @@ import 'Modelo.dart';
 import 'Transporte.dart';
 
 void main(List<String> args) async {
-  String json = await getStringFromJsonFile("ejemplos.json");
+  String json = await getStringFromJsonFile("modelo.json");
   Ejemplos ejemplos = ejemplosFromJson(json);
   List<Modelo> modelos_ejemplo = ejemplos.modelos;
 
-  var solucionador = transporte(modelos_ejemplo[0].costos,
-      modelos_ejemplo[0].demanda, modelos_ejemplo[0].producciones);
+  var solucionador = transporte.from(modelos_ejemplo[0]);
   solucionador.esquina_noroeste_modelo();
+  // solucionador.mostrarIteraciones();
+  solucionador.mostrarSolucionInicial();
 }
 
 Future<String> getStringFromJsonFile(String path) async {

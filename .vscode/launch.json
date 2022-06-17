@@ -8,7 +8,7 @@
             "name": "Dart & Flutter",
             "request": "launch",
             "type": "dart",
-            "program": "/home/pablo/Documentos/invo_proyecto/transporte-1/main.dart",
+            "program": "/home/mrgoropeza/Documentos/Investigación Operativa/TrabajoFinal/transporte/main.dart",
             "console": "terminal"
         }
     ]
